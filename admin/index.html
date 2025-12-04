@@ -4365,10 +4365,22 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@miamvmian.github.io:443?security=tl
             }
         }
 
+        // 获取基础路径，支持子目录部署
+        function getBasePath() {
+            const pathname = window.location.pathname;
+            // 如果路径包含 /admin，提取 /admin 之前的部分作为基础路径
+            const adminIndex = pathname.indexOf('/admin');
+            if (adminIndex > 0) {
+                return pathname.substring(0, adminIndex);
+            }
+            return '';
+        }
+
         async function loadConfig() {
             try {
                 // 禁用 Rocket Loader 对该请求的影响
-                const response = await fetch('/admin/config.json?_t=' + Date.now(), {
+                const basePath = getBasePath();
+                const response = await fetch(basePath + '/admin/config.json?_t=' + Date.now(), {
                     method: 'GET',
                     headers: {
                         'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -4578,7 +4590,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@miamvmian.github.io:443?security=tl
             textarea.value = '正在加载...';
 
             try {
-                const response = await fetch('/admin/ADD.txt?_t=' + Date.now(), {
+                const basePath = getBasePath();
+                const response = await fetch(basePath + '/admin/ADD.txt?_t=' + Date.now(), {
                     headers: {
                         'Cache-Control': 'no-cache, no-store, must-revalidate',
                         'Pragma': 'no-cache',
@@ -5074,7 +5087,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@miamvmian.github.io:443?security=tl
             if (mode === 'custom') {
                 const customIPs = document.getElementById('customIPs').value;
                 try {
-                    await fetch('/admin/ADD.txt', { method: 'POST', body: customIPs });
+                    const basePath = getBasePath();
+                    await fetch(basePath + '/admin/ADD.txt', { method: 'POST', body: customIPs });
                 } catch (error) {
                     showToast('保存自定义IP失败', 'error');
                     return;
@@ -5274,7 +5288,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@miamvmian.github.io:443?security=tl
 
         async function saveConfigToServer(section) {
             try {
-                const response = await fetch('/admin/config.json', {
+                const basePath = getBasePath();
+                const response = await fetch(basePath + '/admin/config.json', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -5446,7 +5461,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@miamvmian.github.io:443?security=tl
 
         async function confirmReset() {
             try {
-                const response = await fetch('/admin/init');
+                const basePath = getBasePath();
+                const response = await fetch(basePath + '/admin/init');
                 if (!response.ok) throw new Error('重置失败');
 
                 closeResetModal();
@@ -5462,7 +5478,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@miamvmian.github.io:443?security=tl
         }
 
         function logout() {
-            window.location.href = '/logout';
+            const basePath = getBasePath();
+            window.location.href = basePath + '/logout';
         }
 
         // 切换用户模式（小白模式 / 高手模式）
@@ -5575,7 +5592,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@miamvmian.github.io:443?security=tl
         // 加载最近8条日志
         async function loadLogs() {
             try {
-                const response = await fetch('/admin/log.json?_t=' + Date.now(), {
+                const basePath = getBasePath();
+                const response = await fetch(basePath + '/admin/log.json?_t=' + Date.now(), {
                     headers: {
                         'Cache-Control': 'no-cache, no-store, must-revalidate',
                         'Pragma': 'no-cache',
@@ -5634,7 +5652,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@miamvmian.github.io:443?security=tl
         // 显示全部日志
         async function showAllLogs() {
             try {
-                const response = await fetch('/admin/log.json?_t=' + Date.now(), {
+                const basePath = getBasePath();
+                const response = await fetch(basePath + '/admin/log.json?_t=' + Date.now(), {
                     headers: {
                         'Cache-Control': 'no-cache, no-store, must-revalidate',
                         'Pragma': 'no-cache',
@@ -6245,7 +6264,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@miamvmian.github.io:443?security=tl
                 confirmBtn.textContent = '保存中...';
 
                 // 提交到后端
-                const response = await fetch('/admin/tg.json', {
+                const basePath = getBasePath();
+                const response = await fetch(basePath + '/admin/tg.json', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -6402,7 +6422,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@miamvmian.github.io:443?security=tl
                     queryParams.append('APIToken', apiToken);
                 }
 
-                const response = await fetch('/admin/getCloudflareUsage?' + queryParams.toString());
+                const basePath = getBasePath();
+                const response = await fetch(basePath + '/admin/getCloudflareUsage?' + queryParams.toString());
 
                 if (!response.ok) {
                     throw new Error('请求失败 (HTTP ' + response.status + ')');
@@ -6473,7 +6494,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@miamvmian.github.io:443?security=tl
                 };
 
                 // 提交到后端
-                const response = await fetch('/admin/cf.json', {
+                const basePath = getBasePath();
+                const response = await fetch(basePath + '/admin/cf.json', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -6510,7 +6532,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@miamvmian.github.io:443?security=tl
                 currentConfig.TG.启用 = document.getElementById('telegramEnabled').checked;
 
                 // 提交到服务器，但整个 currentConfig
-                const response = await fetch('/admin/config.json', {
+                const basePath = getBasePath();
+                const response = await fetch(basePath + '/admin/config.json', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(currentConfig)
@@ -6540,7 +6563,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@miamvmian.github.io:443?security=tl
 
         async function confirmClearTelegramConfig() {
             try {
-                const response = await fetch('/admin/tg.json', {
+                const basePath = getBasePath();
+                const response = await fetch(basePath + '/admin/tg.json', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ init: true })
@@ -6575,7 +6599,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@miamvmian.github.io:443?security=tl
 
         async function confirmClearCloudflareConfig() {
             try {
-                const response = await fetch('/admin/cf.json', {
+                const basePath = getBasePath();
+                const response = await fetch(basePath + '/admin/cf.json', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ init: true })
