@@ -82,24 +82,24 @@ if (response.ok) {
 2. **Create a project** → **Connect to Git**
 3. **Authorize GitHub** and select your repository
 4. **Configure build**:
-   - **Project name**: `edt-pages` (or your choice)
+   - **Project name**: `pages-billow` (or your choice)
    - **Production branch**: `main` (or `master`)
    - **Build command**: (leave empty)
    - **Build output directory**: `/`
 5. **Save and Deploy**
 
-Your Pages URL will be: `https://edt-pages.pages.dev` (or your custom domain)
+Your Pages URL will be: `https://pages-billow.pages.dev` (or your custom domain)
 
 #### Update Worker Configuration
 
 ```bash
 # Set PAGES_URL environment variable
 wrangler secret put PAGES_URL
-# Enter: https://edt-pages.pages.dev
+# Enter: https://pages-billow.pages.dev
 ```
 
 Or in Cloudflare Dashboard:
-- Worker → Settings → Variables → Add `PAGES_URL` = `https://edt-pages.pages.dev`
+- Worker → Settings → Variables → Add `PAGES_URL` = `https://pages-billow.pages.dev`
 
 #### Update ALLOWED_API_DOMAINS
 
@@ -107,7 +107,7 @@ Edit `_worker.secure.js` line ~21:
 ```javascript
 const ALLOWED_API_DOMAINS = [
     // ... existing domains ...
-    'edt-pages.pages.dev',  // Add your Pages domain
+    'pages-billow.pages.dev',  // Add your Pages domain
 ];
 ```
 
@@ -115,7 +115,7 @@ const ALLOWED_API_DOMAINS = [
 
 1. **Create GitHub Repository**:
    ```bash
-   cd EDT-Pages.github.io-main
+   cd pages-billow.github.io-main
    git init
    git add .
    git commit -m "Initial commit: Frontend pages"
@@ -123,13 +123,13 @@ const ALLOWED_API_DOMAINS = [
 
 2. **Create GitHub Repository**:
    - Go to github.com → New repository
-   - Name: `edt-pages` (or `your-username.github.io`)
+   - Name: `pages-billow` (or `your-username.github.io`)
    - Make it **public** (required for free GitHub Pages)
    - Don't initialize with README
 
 3. **Push to GitHub**:
    ```bash
-   git remote add origin https://github.com/YOUR_USERNAME/edt-pages.git
+   git remote add origin https://github.com/YOUR_USERNAME/pages-billow.git
    git branch -M main
    git push -u origin main
    ```
@@ -140,13 +140,13 @@ const ALLOWED_API_DOMAINS = [
    - Save
 
 5. **Get Your Pages URL**:
-   - `https://YOUR_USERNAME.github.io/edt-pages`
+   - `https://YOUR_USERNAME.github.io/pages-billow`
    - Or if repo name matches username: `https://YOUR_USERNAME.github.io`
 
 6. **Update Worker**:
    ```bash
    wrangler secret put PAGES_URL
-   # Enter: https://YOUR_USERNAME.github.io/edt-pages
+   # Enter: https://YOUR_USERNAME.github.io/pages-billow
    ```
 
 ---
@@ -220,9 +220,3 @@ pages-billow.github.io-main/
 **Note**: The Worker already injects CSRF token handling into the admin page, so the admin page should work without changes. Only the login page needs updating.
 
 ---
-
-Would you like me to:
-1. **Fix the login page** now?
-2. **Create a deployment script**?
-3. **Help you set up Cloudflare Pages**?
-
