@@ -599,7 +599,7 @@ body {
 </head>
 <body>
     <!-- 背景内容 -->
-    <iframe id="background-iframe" src="/" title="背景内容"></iframe>
+    <iframe id="background-iframe" src="" title="背景内容"></iframe>
 
     <!-- 毛玻璃效果遮盖层 -->
     <div id="blur-overlay"></div>
@@ -634,6 +634,23 @@ body {
     </div>
 
     <script>
+    // 获取基础路径，支持子目录部署
+    function getBasePath() {
+        const pathname = window.location.pathname;
+        // 如果路径包含 /login，提取 /login 之前的部分作为基础路径
+        const loginIndex = pathname.indexOf('/login');
+        if (loginIndex > 0) {
+            return pathname.substring(0, loginIndex);
+        }
+        return '';
+    }
+
+    // 设置背景iframe的src
+    document.addEventListener('DOMContentLoaded', function() {
+        const basePath = getBasePath();
+        document.getElementById('background-iframe').src = basePath + '/';
+    });
+
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -650,7 +667,8 @@ body {
         loginBtn.classList.add('btn-loading');
         
         try {
-            const response = await fetch('/api/login', {
+            const basePath = getBasePath();
+            const response = await fetch(basePath + '/api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -669,7 +687,8 @@ body {
                         // Store CSRF token for future requests
                         localStorage.setItem('csrfToken', data.csrfToken);
                         // 登录成功，跳转到管理页面
-                        window.location.href = '/admin';
+                        const basePath = getBasePath();
+                        window.location.href = basePath + '/admin';
                     } else {
                         errorMsg.textContent = data.error || '密码错误，请重试';
                         errorMsg.classList.remove('login-error-hidden');
