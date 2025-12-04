@@ -1,0 +1,44 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          path: source
+      
+      - name: Checkout pages repo
+        uses: actions/checkout@v4
+        with:
+          repository: YOUR_USERNAME/my-site-pages
+          token: ${{ secrets.PAGES_REPO_TOKEN }}
+          path: pages
+      
+      - name: Copy files
+        run: |
+          cp -r source/login pages/
+          cp -r source/admin pages/
+          cp -r source/noADMIN pages/
+          cp -r source/noKV pages/
+      
+      - name: Commit and push
+        run: |
+          cd pages
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Deploy from private repo" || exit 0
+          git push
