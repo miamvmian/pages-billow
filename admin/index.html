@@ -3697,22 +3697,24 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@miamvmian.github.io:443?security=tl
                 <div class="module-content">
 
                     <div class="form-group">
-                        <label for="subAPI">订阅转换后端</label>
-                        <div class="readonly-wrapper" onclick="openSubAPIModal()">
+                        <label for="subAPI" style="margin-bottom: 8px; font-weight: 500;">订阅转换后端</label>
+                        <div class="readonly-wrapper" onclick="openSubAPIModal()" style="margin-top: 0;">
                             <input type="text" id="subAPI" title="订阅转换后端" readonly
-                                placeholder="https://SUBAPI.cmliussss.net" class="subapi-input">
+                                placeholder="https://SUBAPI.cmliussss.net" class="subapi-input"
+                                style="width: 100%; padding: 10px 14px; font-size: 14px;">
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="githubProxyUrl">GitHub代理Worker地址</label>
-                        <div class="input-wrapper">
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label for="githubProxyUrl" style="margin-bottom: 8px; font-weight: 500;">GitHub代理Worker地址</label>
+                        <div class="input-wrapper" style="margin-top: 0;">
                             <input type="text" id="githubProxyUrl" title="GitHub代理Worker地址"
                                 placeholder="https://nanophoton.dpdns.org (留空则直接使用GitHub)" 
-                                onchange="markModified('convert')">
+                                onchange="markModified('convert')"
+                                style="width: 100%; padding: 10px 14px; font-size: 14px;">
                         </div>
-                        <small style="color: #6b7280; font-size: 12px; margin-top: 4px; display: block;">
-                            用于代理GitHub raw内容，留空则直接访问GitHub
+                        <small style="color: #6b7280; font-size: 12px; margin-top: 6px; display: block; line-height: 1.5;">
+                            💡 用于代理GitHub raw内容，留空则直接访问GitHub
                         </small>
                     </div>
 
