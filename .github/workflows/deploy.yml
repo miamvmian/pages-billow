@@ -23,7 +23,7 @@ jobs:
       - name: Checkout pages repo
         uses: actions/checkout@v4
         with:
-          repository: YOUR_USERNAME/my-site-pages
+          repository: YOUR_USERNAME/billow_pages_site
           token: ${{ secrets.PAGES_REPO_TOKEN }}
           path: pages
       
