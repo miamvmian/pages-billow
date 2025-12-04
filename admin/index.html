@@ -3704,6 +3704,18 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@miamvmian.github.io:443?security=tl
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <label for="githubProxyUrl">GitHub代理Worker地址</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="githubProxyUrl" title="GitHub代理Worker地址"
+                                placeholder="https://nanophoton.dpdns.org (留空则直接使用GitHub)" 
+                                onchange="markModified('convert')">
+                        </div>
+                        <small style="color: #6b7280; font-size: 12px; margin-top: 4px; display: block;">
+                            用于代理GitHub raw内容，留空则直接访问GitHub
+                        </small>
+                    </div>
+
                     <div class="form-group" style="align-items: start;">
                         <label for="subConfigSelect" style="padding-top: 10px;">订阅转换配置文件</label>
                         <div class="input-wrapper" style="flex-direction: column; align-items: stretch;">
@@ -4465,6 +4477,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@miamvmian.github.io:443?security=tl
             document.getElementById('subAPI').value = currentConfig.订阅转换配置?.SUBAPI || '';
             document.getElementById('subConfig').value = currentConfig.订阅转换配置?.SUBCONFIG || '';
             document.getElementById('emoji').checked = currentConfig.订阅转换配置?.SUBEMOJI || false;
+            document.getElementById('githubProxyUrl').value = currentConfig.订阅转换配置?.GITHUB_PROXY_URL || '';
 
             // 消息通知设置 - 兼容两种config结构
             // 优先读取 TG 字段，如果没有则读取 通知.Telegram
@@ -5113,10 +5126,21 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@miamvmian.github.io:443?security=tl
             await saveConfigToServer('proxy');
         }
 
+        // Helper function to get GitHub raw URL (via proxy if configured, otherwise direct)
+        function getGitHubRawUrl(githubRawUrl) {
+            // Get GitHub Proxy URL from config
+            const proxyUrl = currentConfig?.订阅转换配置?.GITHUB_PROXY_URL || '';
+            if (proxyUrl && proxyUrl.trim()) {
+                return `${proxyUrl.trim()}/?url=${encodeURIComponent(githubRawUrl)}`;
+            }
+            return githubRawUrl;
+        }
+
         // 加载SubConfig JSON数据
         async function loadSubConfigData() {
             try {
-                const response = await fetch('https://github.cmliussss.net/raw.githubusercontent.com/cmliu/cmliu/main/SUBCONFIG.json');
+                const githubRawUrl = 'https://raw.githubusercontent.com/cmliu/cmliu/main/SUBCONFIG.json';
+                const response = await fetch(getGitHubRawUrl(githubRawUrl));
                 if (!response.ok) throw new Error('Failed to fetch SUBCONFIG');
                 subConfigData = await response.json();
                 populateSubConfigSelect();
@@ -5210,7 +5234,8 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@miamvmian.github.io:443?security=tl
             currentConfig.订阅转换配置 = {
                 SUBAPI: document.getElementById('subAPI').value,
                 SUBCONFIG: document.getElementById('subConfig').value,
-                SUBEMOJI: document.getElementById('emoji').checked
+                SUBEMOJI: document.getElementById('emoji').checked,
+                GITHUB_PROXY_URL: document.getElementById('githubProxyUrl').value.trim()
             };
 
             await saveConfigToServer('convert');
@@ -5309,6 +5334,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@miamvmian.github.io:443?security=tl
                 document.getElementById('subAPI').value = currentConfig.订阅转换配置?.SUBAPI || '';
                 document.getElementById('subConfig').value = currentConfig.订阅转换配置?.SUBCONFIG || '';
                 document.getElementById('emoji').checked = currentConfig.订阅转换配置?.SUBEMOJI || false;
+                document.getElementById('githubProxyUrl').value = currentConfig.订阅转换配置?.GITHUB_PROXY_URL || '';
                 // 重新填充下拉框以恢复正确的选中状态
                 populateSubConfigSelect();
             }
@@ -6609,6 +6635,7 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@miamvmian.github.io:443?security=tl
                     document.getElementById('subAPI').value = currentConfig.订阅转换配置?.SUBAPI || '';
                     document.getElementById('subConfig').value = currentConfig.订阅转换配置?.SUBCONFIG || '';
                     document.getElementById('emoji').checked = currentConfig.订阅转换配置?.SUBEMOJI || false;
+                    document.getElementById('githubProxyUrl').value = currentConfig.订阅转换配置?.GITHUB_PROXY_URL || '';
                 }
             }
 
@@ -7177,10 +7204,10 @@ vless://7b102311-43fd-4e8f-977e-8090623c101d@miamvmian.github.io:443?security=tl
         async function getIPList(ipLibrary, port) {
             const urls = {
                 'cf-official': 'https://cf.090227.xyz/ips-v4',
-                'cm-list': 'https://github.cmliussss.net/raw.githubusercontent.com/cmliu/cmliu/main/CF-CIDR.txt',
-                'as13335': 'https://github.cmliussss.net/raw.githubusercontent.com/ipverse/asn-ip/master/as/13335/ipv4-aggregated.txt',
-                'as209242': 'https://github.cmliussss.net/raw.githubusercontent.com/ipverse/asn-ip/master/as/209242/ipv4-aggregated.txt',
-                'reverse-proxy': 'https://github.cmliussss.net/raw.githubusercontent.com/cmliu/ACL4SSR/main/baipiao.txt'
+                'cm-list': getGitHubRawUrl('https://raw.githubusercontent.com/cmliu/cmliu/main/CF-CIDR.txt'),
+                'as13335': getGitHubRawUrl('https://raw.githubusercontent.com/ipverse/asn-ip/master/as/13335/ipv4-aggregated.txt'),
+                'as209242': getGitHubRawUrl('https://raw.githubusercontent.com/ipverse/asn-ip/master/as/209242/ipv4-aggregated.txt'),
+                'reverse-proxy': getGitHubRawUrl('https://raw.githubusercontent.com/cmliu/ACL4SSR/main/baipiao.txt')
             };
 
             try {
